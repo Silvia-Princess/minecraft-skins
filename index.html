@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>GitHub Minecraft Skins 3D</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.cdnfonts.com/css/minecraftia" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      background-color: #121212;
+      color: #fff;
+      font-family: sans-serif;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .player-card {
+      background: #1e1e1e;
+      padding: 8px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 0 12px rgba(0, 255, 0, 0.15);
+      position: relative;
+    }
+
+    canvas {
+      border-radius: 6px;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 3 / 4;
+    }
+
+    .player-name {
+      margin-bottom: 6px;
+      font-size: 0.9em;
+      font-family: 'Minecraftia', monospace;
+    }
+
+    .toggle-btn {
+      position: absolute;
+      bottom: 6px;
+      right: 6px;
+      padding: 4px 8px;
+      font-size: 0.7em;
+      background-color: #1e1e1e;
+      color: #5BCEFA;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .toggle-btn:hover {
+      background-color: #121212;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Silvia's Minecraft Accounts</h1>
+  <div class="grid" id="grid-container"></div>
+
+  <script src="https://unpkg.com/skinview3d/bundles/skinview3d.bundle.js"></script>
+  <script>
+    const players = [
+      { username: "SilviaPrincess", prefix: "[Skytitan]", color: "#00AAAA" },
+      { username: "Arlyaverse", prefix: "[Skytitan]", color: "#00AAAA" },
+      { username: "Real_Silvia", prefix: "[Skylord]", color: "#FF55FF" },
+      { username: "FishMaps", prefix: "[Skygod]", color: "#55FFFF" },
+      { username: "Mob_Arena", prefix: "[Skyking]", color: "#FFAA00" },
+      { username: "Shiny_Flareon", prefix: "[Skygod]", color: "#55FFFF" },
+      { username: "Shiny_Espeon", prefix: "[Skygod]", color: "#55FFFF" },
+      { username: "Shiny_Vaporeon", prefix: "[Skygod]", color: "#55FFFF" },
+      { username: "felix_argy1e", prefix: "[Skyknight]", color: "#FFFF55" },
+    ];
+
+    const repoBase = "https://raw.githubusercontent.com/Silvia-Princess/minecraft-skins/main/";
+    const grid = document.getElementById("grid-container");
+
+    players.forEach((player, index) => {
+      const container = document.createElement("div");
+      container.className = "player-card";
+
+      const label = document.createElement("div");
+      label.className = "player-name";
+      label.innerHTML = `<span style="color:${player.color}">${player.prefix} ${player.username}</span>`;
+
+      const canvas = document.createElement("canvas");
+      canvas.id = `canvas-${index}`;
+
+      const button = document.createElement("button");
+      button.className = "toggle-btn";
+      button.textContent = "▶️";
+
+      // Append in new order: name above, model, then button
+      container.appendChild(label);
+      container.appendChild(canvas);
+      container.appendChild(button);
+      grid.appendChild(container);
+
+      const viewer = new skinview3d.SkinViewer({
+        canvas: canvas,
+        width: 150,
+        height: 200,
+        skin: `${repoBase}${player.username}.png`
+      });
+
+      viewer.controls.enableZoom = false;
+      viewer.controls.enableRotate = true;
+
+      const animation = new skinview3d.WalkingAnimation();
+      animation.speed = 1;
+      animation.paused = true;
+      viewer.animation = animation;
+
+      button.addEventListener("click", () => {
+        animation.paused = !animation.paused;
+        button.textContent = animation.paused ? "▶️" : "⏸️";
+      });
+    });
+  </script>
+
+</body>
+</html>
